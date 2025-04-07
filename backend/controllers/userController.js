@@ -38,23 +38,29 @@ const createUser = asyncHandler(async(req, res) =>{
 
 });
 
+
 // To Login User
-const loginUser = asyncHandler(async(req, res) => {
-    const {email, password} = req.body;
-
-    const existingUser = await User.findOne({email})
-
-    if(existingUser){
-        const isValidPassword = await bcrypt.compare(password, existingUser.password)
-
-        if(isValidPassword){
-            createToken(res, existingUser._id)
-            res.status(200).json({"User logged In": existingUser})
-        }
-        return;
+// To Login User
+const loginUser = asyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+  
+    const existingUser = await User.findOne({ email });
+  
+    if (existingUser && (await bcrypt.compare(password, existingUser.password))) {
+      createToken(res, existingUser._id);
+  
+      res.status(200).json({
+        _id: existingUser._id,
+        username: existingUser.username,
+        email: existingUser.email,
+        isAdmin: existingUser.isAdmin,
+      });
+    } else {
+      res.status(401);
+      throw new Error("Invalid email or password");
     }
-    
-});
+  });
+
 
 
 //  Logout Current User
