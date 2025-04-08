@@ -15,7 +15,7 @@ import "./Navigation.css";
 
 const Navigation = () => {
   const { userInfo } = useSelector(state => state.auth);
-  console.log("userInfo in Navigation:", userInfo); // ✅ ADD THIS LINE
+  // console.log("userInfo in Navigation:", userInfo); //
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);

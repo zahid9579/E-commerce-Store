@@ -75,10 +75,12 @@ const Login = () => {
                 <div className='mt-4'>
                     <p>New Customer? {""} <Link to={redirect ? `/register?redirect=${redirect}` : "/register"}  className='text-pink-500 hover:underline'>Register</Link></p>
                 </div>
-
-
-
             </div>
+
+            {/* <img src="https://images.unsplash.com/photo-1659968022054-14a04e63ec04?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTkwfHxsb2dpbnxlbnwwfHwwfHx8MA%3D%3D"
+            alt='Login image' className='h-[65rem] w-[59%] xl:block md:hidden rounded-lg'/> */}
+
+
         </section>
        
     </div>
