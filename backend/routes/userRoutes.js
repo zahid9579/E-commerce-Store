@@ -9,7 +9,6 @@ const router = express.Router();
 
 // User Site Route
 
-
 router.route('/').post(createUser).get(authenticate, authorizeAdmin, getAllUsers);
 
 //  http://localhost:5000/api/users/auth
