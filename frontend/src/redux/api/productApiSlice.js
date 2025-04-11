@@ -20,12 +20,12 @@ export const productApiSlice = apiSlice.injectEndpoints({
         }),
 
         allProducts: builder.query({
-            query: () => `${PRODUCT_URL}/ allproducts`
+            query: () => `${PRODUCT_URL}/allproducts`
         }),
 
         getProductDetails: builder.query({
             query: (productId) => ({
-                url: `${PRODUCT_URL}/ ${productId}`
+                url: `${PRODUCT_URL}/${productId}`
 
             }),
             keepUnusedDataFor: 5,
@@ -44,8 +44,8 @@ export const productApiSlice = apiSlice.injectEndpoints({
             query: ({productId, formData}) => ({
                 url:`${PRODUCT_URL}/${productId}`,
                 method: 'PUT',
-                body: formData
-            })
+                body: formData,
+            }),
         }),
 
         uploadProductImage: builder.mutation({
@@ -67,6 +67,8 @@ export const productApiSlice = apiSlice.injectEndpoints({
             }),
             providesTags: ["Product"],
         }),
+
+
 
         createReview: builder.mutation({
             query: (data) => ({
@@ -94,14 +96,17 @@ export const productApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-    useGetProductsQuery,
-    useAllProductsQuery,
-    useCreateProductMutation,
-    useUpdateProductMutation,
-    useDeleteProductMutation,
-    useCreateReviewMutation,
-    useGetNewProductsQuery,
-    useGetTopProductsQuery,
-    useUploadProductImageMutation,
+    useGetProductByIdQuery,
+  useGetProductsQuery,
+  useGetProductDetailsQuery,
+  useAllProductsQuery,
+  useCreateProductMutation,
+  useUpdateProductMutation,
+  useDeleteProductMutation,
+  useCreateReviewMutation,
+  useGetTopProductsQuery,
+  useGetNewProductsQuery,
+  useUploadProductImageMutation,
+//   useGetFilteredProductsQuery,
 
 } = productApiSlice
