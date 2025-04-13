@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
+import HeartIcon from './HeartIcon';
 
 const SmallProduct = ({ product }) => {
 
@@ -11,7 +12,7 @@ const SmallProduct = ({ product }) => {
           alt={product.name}
           className='w-full h-48 object-cover rounded'
         />
-        {/* <HeartIcon product={product}/> */}
+        <HeartIcon product={product}/>
       </div>
 
       <div className='mt-4'>
