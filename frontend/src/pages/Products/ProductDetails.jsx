@@ -9,6 +9,7 @@ import { FaBox, FaClock, FaShoppingCart, FaStar, FaStore } from 'react-icons/fa'
 import moment from 'moment'
 import HeartIcon from './HeartIcon'
 import Ratings from './Ratings'
+import ProductTabs from './ProductTabs'
 
 const ProductDetails = () => {
   const { id: productId } = useParams()
@@ -22,6 +23,23 @@ const ProductDetails = () => {
   const { userInfo } = useSelector((state) => state.auth)
 
   const [createReview, { isLoading: loadingProductReview }] = useCreateReviewMutation()
+  
+  const submitHandler = async(e) => {
+    e.preventDefault();
+
+    try{
+      await createReview({
+        productId, rating, comment
+      }).unwrap()
+      refetch()
+      toast.success("Review created Successfully")
+
+    }catch(error){
+      toast.error(error?.data?.message || error.message)
+    }
+
+  }
+
 
   return (
     <>
@@ -108,12 +126,38 @@ const ProductDetails = () => {
                 )}
             </div>
 
-
-
-
-
+            {/* add to cart */}
+            <div className="btn-container">
+              <button 
+                // onClick={addToCartHandler} 
+                disabled={product.countInStock === 0} 
+                className='bg-pink-600 text-white py-2 px-4 rounded-lg mt-4 md:mt-0'>
+                Add To Cart
+              </button>
 
             </div>
+            </div>
+
+            <div className='mt-[5rem] container flex flex-wrap items-start justify-between ml-[10rem]'>
+              {/* Product Tabs */}
+              <ProductTabs
+                loadingProductReview={loadingProductReview}
+                userInfo={userInfo}
+                submitHandler={submitHandler}
+                rating={rating}
+                setRating={setRating}
+                comment={comment}
+                setComment={setComment}
+                product={product}
+
+
+                
+              />
+            </div>
+
+
+
+
           </div>
         </>
       )}
