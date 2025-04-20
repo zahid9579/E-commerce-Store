@@ -212,10 +212,14 @@ const markOrderAsDelivered = async(req, res) => {
             const updatedOrder = await order.save()
             res.json(updatedOrder)
         }else{
+
+            
             res.status(404)
             throw new Error("Order not Found");
         }
         
+
+
 
     }catch(error){
         res.status(500).json({error: error.message})
