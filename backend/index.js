@@ -25,9 +25,15 @@ app.use(cookieParser());
 
 app.use('/api/users/', userRoutes);
 app.use('/api/category', categoryRoutes);
-app.use('/api/products', productRoutes)
-app.use('/api/uploads', uploadRoutes)
-app.use('/api/orders', orderRoutes)
+app.use('/api/products', productRoutes);
+app.use('/api/uploads', uploadRoutes);
+app.use('/api/orders', orderRoutes);
+
+
+app.get('/api/config/paypal', (req, res) =>{
+    res.send({ clientId: process.env.PAYPAL_CLIENT_ID });
+});
+
 
 const __dirname = path.resolve()
 app.use('/uploads', express.static(path.join(__dirname + '/uploads')));
