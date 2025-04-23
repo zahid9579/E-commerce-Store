@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Message from "../../components/Message/Message";
 import ProgressSteps from "../../components/ProgressSteps/ProgressSteps";
 import Loader from "../../components/Loader/Loader";
-import { useCreateProductMutation } from "../../redux/api/productApiSlice";
+import {useCreateOrderMutation} from '../../redux/api/orderApiSlice';
 import { clearCartItems } from "../../redux/features/cart/cartSlice";
 
 const PlaceOrder = () => {
@@ -13,13 +13,35 @@ const PlaceOrder = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
 
-  const [createOrder, { isLoading, error }] = useCreateProductMutation();
+  const [createOrder, { isLoading, error }] = useCreateOrderMutation();
 
   useEffect(() => {
     if (!cart.shippingAddress.address) {
       navigate("/shipping");
     }
   }, [cart.paymentMethod, cart.shippingAddress.address, navigate]);
+
+
+  const placeOrderHandler = async () => {
+    try{
+      const res = await createOrder({
+        orderItems: cart.cartItems,
+        shippingAddress: cart.shippingAddress,
+        paymentMethod: cart.paymentMethod,
+        itemsPrice: cart.itemsPrice,
+        shippingPrice: cart.shippingPrice,
+        taxPrice: cart.taxPrice,
+        totalPrice: cart.totalPrice
+      }).unwrap()
+      dispatch(clearCartItems())
+      navigate(`/order/${res._id}`);
+
+    }catch(error){
+      toast.error(error)
+    }
+  }
+
+
 
   return (
     <>
@@ -103,10 +125,18 @@ const PlaceOrder = () => {
 
                 <div>
                     <h2 className="text-2xl font-semibold mb-4"> Payment Method</h2>
+                    <strong>Method:</strong>{" "}
+                    {cart.paymentMethod}
                 </div>
-
-
               </div>
+
+              <button type="button" className="bg-pink-500 text-white py-2 px-4 rounded-full text-lg w-full mt-4" disabled={cart.cartItems === 0} onClick={placeOrderHandler}>Place Order</button>
+
+
+              {isLoading && <Loader/>}
+
+
+
             </div>
           </>
         )}
