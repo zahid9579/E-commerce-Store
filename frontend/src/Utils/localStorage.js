@@ -17,8 +17,6 @@ export const removeFavoriteFromLocalStorage = (productId) => {
 
 
 
-
-
 // Retrive favorites from a localStorage
 export const getFavoritesFromLocalStorage = () =>{
     const favoritesJSON = localStorage.getItem('favorites')

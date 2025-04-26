@@ -24,7 +24,7 @@ const Order = () => {
     error,
   } = useGetOrderDetailsQuery(orderId);
 
-   const [payOrder, {isLoading: loadingPay}] = usePayOrderMutation();
+  const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
 
   const [deliverOrder, { isLoading: loadingDeliver }] =
     useDeliverOrderMutation();
@@ -59,42 +59,37 @@ const Order = () => {
     }
   }, [errorPayPal, loadingPayPal, order, paypal, paypalDispatch]);
 
-
   function onApprove(data, actions) {
-    return actions.order.capture().then(async function(details){
-        try{
-            await payOrder({orderId, details})
-            refetch()
-            toast.success("Order is Paid");
-
-        }catch(error){
-            toast.error(error?.data?.message || error.message)
-
-        }
+    return actions.order.capture().then(async function (details) {
+      try {
+        await payOrder({ orderId, details });
+        refetch();
+        toast.success("Order is Paid");
+      } catch (error) {
+        toast.error(error?.data?.message || error.message);
+      }
     });
-  };
-
-
-//    To create Order for PAYPAL
-  function createOrder(data, actions) {
-    return actions.order
-        .createOrder({
-            purchase_units: [{amount: {value: order.totalPrice}}],
-        })
-        .then((orderID) => {
-            return orderId;
-        });
-
-  };
-
-
-
-
-  function onError(err){
-    toast.error(err.message)
   }
 
+  //    To create Order for PAYPAL
+  function createOrder(data, actions) {
+    return actions.order
+      .create({
+        purchase_units: [{ amount: { value: order.totalPrice } }],
+      })
+      .then((orderId) => {
+        return orderId;
+      });
+  }
 
+  function onError(err) {
+    toast.error(err.message);
+  }
+
+  const deliverHandler = async () => {
+    await deliverOrder(orderId);
+    refetch();
+  };
 
   return isLoading ? (
     <Loader />
@@ -154,8 +149,7 @@ const Order = () => {
           <h2 className="text-xl font-bold mb-2">Shipping</h2>
 
           <p className="mb-4 mt-4">
-            <strong className="text-pink-500">Order:</strong>{" "}
-            {order._id}
+            <strong className="text-pink-500">Order:</strong> {order._id}
           </p>
 
           <p className="mb-4">
@@ -163,74 +157,82 @@ const Order = () => {
             {order.user.username}
           </p>
 
-
           <p className="mb-4">
-            <strong className="text-pink-500">Email:</strong>{" "}
-            {order.user.email}
+            <strong className="text-pink-500">Email:</strong> {order.user.email}
           </p>
 
           <p className="mb-4">
             <strong className="text-pink-500">Address:</strong>{" "}
-            {order.shippingAddress.address}, {order.shippingAddress.city} {" "}
+            {order.shippingAddress.address}, {order.shippingAddress.city}{" "}
             {order.shippingAddress.postalCode}, {order.shippingAddress.country}
-
           </p>
 
-          
           <p className="mb-4">
             <strong className="text-pink-500">Method:</strong>{" "}
             {order.paymentMethod}
           </p>
 
-
           {order.isPaid ? (
-            <Message variant="success" >Paid On {order.paidAt}</Message>
-
+            <Message variant="success">Paid On {order.paidAt}</Message>
           ) : (
-            <Message variant="danger" >Not Paid {order.paidAt}</Message>
+            <Message variant="danger">Not Paid {order.paidAt}</Message>
           )}
-        
         </div>
 
         <h2 className="text-xl font-bold mb-2 mt-[3rem]">Order Summary</h2>
         <div className="flex justify-between mb-2">
-            <span>Items</span>
-            <span>$ {order.itemsPrice}</span>
-        </div>
-
-
-        <div className="flex justify-between mb-2">
-            <span>Shipping</span>
-            <span>$ {order.shippingPrice}</span>
-        </div>
-
-
-        <div className="flex justify-between mb-2">
-            <span>Tax</span>
-            <span>$ {order.taxPrice}</span>
+          <span>Items</span>
+          <span>$ {order.itemsPrice}</span>
         </div>
 
         <div className="flex justify-between mb-2">
-            <span>Total</span>
-            <span>$ {order.totalPrice}</span>
+          <span>Shipping</span>
+          <span>$ {order.shippingPrice}</span>
         </div>
 
-        {!order.isPaid &&  (
-            <div>
-                {loadingPay && <Loader/>}
-                {isPending ?  <Loader/> : <div>
+        <div className="flex justify-between mb-2">
+          <span>Tax</span>
+          <span>$ {order.taxPrice}</span>
+        </div>
 
-                       <div>
-                          <PayPalButtons 
-                            createOrder={createOrder} onApprove={onApprove} onError={onError}>
-                          </PayPalButtons>
-                       </div>
-                    </div>}
-            </div>
-           
-           
+        <div className="flex justify-between mb-2">
+          <span>Total</span>
+          <span>$ {order.totalPrice}</span>
+        </div>
+
+        {!order.isPaid && (
+          <div>
+            {loadingPay && <Loader />}
+            {isPending ? (
+              <Loader />
+            ) : (
+              <div>
+                <div>
+                  <PayPalButtons
+                    createOrder={createOrder}
+                    onApprove={onApprove}
+                    onError={onError}
+                  ></PayPalButtons>
+                </div>
+              </div>
+            )}
+          </div>
         )}
+        
 
+         {/* Deliver handler */}
+        {loadingDeliver && <Loader />}
+        {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+          <div>
+            <button
+              type="button"
+              className="bg-pink-500 text-white w-full py-2"
+              onClick={deliverHandler}
+            >
+              Mark As Delivered
+            </button>
+          </div>
+        )}
 
 
       </div>

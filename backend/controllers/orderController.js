@@ -179,7 +179,7 @@ const markOrderAsPaid = async(req, res) => {
         const order = await Order.findById(req.params.id)
 
         if(order){
-            order.isPaid = true,
+            order.isPaid = true
             order.paidAt = Date.now(),
             order.paymentResult = {
                 id: req.body.id,
@@ -206,7 +206,7 @@ const markOrderAsDelivered = async(req, res) => {
         const order = await Order.findById(req.params.id)
         
         if(order){
-            order.isDelivered = true,
+            order.isDelivered = true
             order.deliveredAt = Date.now()
 
             const updatedOrder = await order.save()

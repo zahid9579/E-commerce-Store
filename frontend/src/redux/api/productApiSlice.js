@@ -104,7 +104,7 @@ export const productApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-    useGetProductByIdQuery,
+  useGetProductByIdQuery,
   useGetProductsQuery,
   useGetProductDetailsQuery,
   useAllProductsQuery,
